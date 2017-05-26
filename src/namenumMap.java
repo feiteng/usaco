@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class namenum
+public class namenumMap // using map
 {
 
 	static BufferedReader reader;
@@ -34,9 +34,8 @@ public class namenum
 	{
 
 		long t = System.currentTimeMillis();
-		namenum g = new namenum();
-		g.setup();
-		g.run();
+		setup();
+		run();
 
 		if ( test )
 			System.out.printf( "Run time... %s ms\n", System.currentTimeMillis() - t );
@@ -45,10 +44,10 @@ public class namenum
 
 	}
 
-	Map<Character, Integer> numpad = new HashMap<>();
-	Map<BigInteger, Set<String>> map = new HashMap<>();
+	static Map<Character, Integer> numpad = new HashMap<>();
+	static Map<BigInteger, Set<String>> map = new HashMap<>();
 
-	void setup() throws IOException
+	static void setup() throws IOException
 	{
 
 		if ( test )
@@ -90,7 +89,7 @@ public class namenum
 		numpad.put( 'Y', 9 );
 	}
 
-	void run() throws IOException
+	static void run() throws IOException
 	{
 		StringTokenizer st;
 		st = new StringTokenizer( reader.readLine() );
@@ -116,7 +115,7 @@ public class namenum
 
 	}
 
-	BigInteger convert( String name )
+	static BigInteger convert( String name )
 	{
 		String string = "";
 		for ( char c : name.toCharArray() )
@@ -219,13 +218,13 @@ public class namenum
 	// }
 	// }
 	//
-	String[] nameString = {
+	static String[] nameString = {
 			null, // 0
 			null, // 1
 			// 2 3 4 5 6 7 8 9
 			"ABC", "DEF", "GHI", "JKL", "MNO", "PRS", "TUV", "WXY" };
 
-	String[] names = { "AARON", "ABBIE", "ABBOTT", "ABBRA", "ABBY", "ABE", "ABEL", "ABENI", "ABIA", "ABIBA", "ABIE", "ABIGAIL", "ABNER",
+	static String[] names = { "AARON", "ABBIE", "ABBOTT", "ABBRA", "ABBY", "ABE", "ABEL", "ABENI", "ABIA", "ABIBA", "ABIE", "ABIGAIL", "ABNER",
 			"ABRAHAM",
 			"ABRAM", "ABRIANNA", "ABRIENDA", "ABRIL", "ABSOLOM", "ABU", "ACACIA", "ACE", "ADA", "ADAH", "ADAIR", "ADALIA", "ADAM", "ADAMINA",
 			"ADAMMA", "ADARA", "ADDISON", "ADE", "ADELA", "ADELAIDE", "ADELE", "ADELINE", "ADELIO", "ADELLE", "ADEM", "ADEN", "ADERES", "ADIE",
