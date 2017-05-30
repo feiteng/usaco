@@ -12,8 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class wormhole
@@ -23,43 +22,79 @@ public class wormhole
 
 	static boolean test = false;
 
+	static int[] immediateRight;
+
 	static void run() throws IOException
 	{
 		StringTokenizer st;
 		st = new StringTokenizer( reader.readLine() );
 		int n = Integer.valueOf( st.nextToken() );
-		st = new StringTokenizer( reader.readLine() );
-		int a = Integer.valueOf( st.nextToken() ), b = Integer.valueOf( st.nextToken() ), c = Integer.valueOf( st.nextToken() );
-		st = new StringTokenizer( reader.readLine() );
-		int d = Integer.valueOf( st.nextToken() ), e = Integer.valueOf( st.nextToken() ), f = Integer.valueOf( st.nextToken() );
+		int[][] pos = new int[n + 1][2];
+		immediateRight = new int[n + 1];
+		for ( int i = 1; i <= n; i++ )
+		{
+			st = new StringTokenizer( reader.readLine() );
+			int u = Integer.valueOf( st.nextToken() ), v = Integer.valueOf( st.nextToken() );
+			pos[i][0] = u;
+			pos[i][1] = v;
+		}
+		for ( int i = 1; i <= n; i++ )
+		{
+			for ( int j = 1; j <= n; j++ )
+			{
+				if ( pos[j][1] == pos[i][1] && pos[j][0] > pos[i][0] )
+					if ( immediateRight[i] == 0 || pos[j][0] - pos[i][0] < pos[immediateRight[i]][0] - pos[i][0] )
+						immediateRight[i] = j;
+			}
+		}
+		System.out.println( Arrays.toString( immediateRight ) );
+		int[] partner = new int[n + 1];
 
-		Set<Integer> s1 = neighbour( n, a ),
-				s2 = neighbour( n, b ),
-				s3 = neighbour( n, c ),
-				s4 = neighbour( n, d ),
-				s5 = neighbour( n, e ),
-				s6 = neighbour( n, f );
-		int count = s1.size() * s2.size() * s3.size() + s4.size() * s5.size() * s6.size();
-		s1.retainAll( s4 );
-		s2.retainAll( s5 );
-		s3.retainAll( s6 );
+		out.println( solve( partner ) );
 
-		int intersection = s1.size() * s2.size() * s3.size();
-
-		out.println( count - intersection );
 	}
 
-	static Set<Integer> neighbour( int n, int a )
+	static boolean thereExistsCycle( int[] partner )
 	{
-		Set<Integer> set = new HashSet<>();
-		int a0 = a - 1 > 0 ? a - 1 : n, a01 = a0 - 1 > 0 ? a0 - 1 : n, a1 = a + 1 > n ? 1 : a + 1, a2 = a1 + 1 > n ? 1 : a1 + 1;
-		set.add( a );
-		set.add( a0 );
-		set.add( a01 );
-		set.add( a1 );
-		set.add( a2 );
-		return set;
+		// return false;
+		System.out.println( Arrays.toString( partner ) );
+		for ( int i = 1; i < partner.length; i++ )
+		{
+			int pos = i;
+			for ( int j = 1; j < partner.length; j++ )
+				pos = immediateRight[partner[pos]];
+			if ( pos != 0 )
+				return true;
+		}
+		return false;
+	}
 
+	static int solve( int[] partner )
+	{
+		int i = 1, total = 0;
+		for ( i = 1; i < partner.length; i++ )
+		{
+			if ( partner[i] == 0 )
+				break;
+		}
+		if ( i == partner.length )
+		{
+			if ( thereExistsCycle( partner ) )
+				return 1;
+			return 0;
+		}
+		for ( int j = i + 1; j < partner.length; j++ )
+		{
+			if ( partner[j] == 0 )
+			{
+				partner[i] = j;
+				partner[j] = i;
+				total += solve( partner );
+				partner[i] = partner[j] = 0;
+			}
+
+		}
+		return total;
 	}
 
 	static BufferedReader reader;
