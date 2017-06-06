@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,34 +28,71 @@ public class milk3
 	static void run() throws IOException
 	{
 		StringTokenizer st;
-		st = new StringTokenizer( reader.readLine() );
-		int a = Integer.valueOf( st.nextToken() ), b = Integer.valueOf( st.nextToken() ), c = Integer.valueOf( st.nextToken() );
-		Set<Integer> list = new HashSet<>();
-		int m = 0;
-		while ( b > a * m && c > a * m )
+
+		int a, b, c;
+		if ( test )
 		{
-			list.add( c - a * m );
-			m++;
+			a = 8;
+			b = 9;
+			c = 10;
 		}
-		int newc = c > b ? c - b : 0;
-		b = Math.min( b, c );
-		m = 0;
-		while ( b > a * m )
+		else
 		{
-			list.add( newc + a * m );
-			m++;
+			st = new StringTokenizer( reader.readLine() );
+			a = Integer.valueOf( st.nextToken() );
+			b = Integer.valueOf( st.nextToken() );
+			c = Integer.valueOf( st.nextToken() );
 		}
-		if ( b > a && c > a && b > c - a )
-			list.add( a );
-		List<Integer> iList = new ArrayList<>( list );
-		Collections.sort( iList );
+		c1 = a;
+		c2 = b;
+		c3 = c;
+		visited = new boolean[c1 + 1][c2 + 1][c3 + 1];
+		dfs( 0, 0, c );
 		String string = "";
 		List<String> sList = new ArrayList<>();
-		for ( int k : iList )
+		for ( int k : set )
 			sList.add( String.valueOf( k ) );
 		string = String.join( " ", sList );
 		// string += "\n";
 		out.println( string );
+	}
+
+	static Set<Integer> set = new HashSet<>();
+	static int c1, c2, c3;
+	static boolean[][][] visited;
+
+	static void dfs( int a, int b, int c )
+	{
+		if ( visited[a][b][c] )
+			return;
+		visited[a][b][c] = true;
+		if ( a == 0 ) // add c
+		{
+			set.add( c );
+
+			// c -> a
+			if ( c1 <= c )
+				dfs( c1, b, c - c1 );
+			else
+				dfs( c, b, 0 );
+			// c -> b
+			if ( b + c <= c2 )
+				dfs( a, b + c, 0 );
+			else
+				// b + c > c2 -> c > c2-b
+				dfs( a, c2, c - ( c2 - b ) );
+		}
+		else // a not zero, pour a into b and c
+		{
+			if ( b + a <= c2 )
+				dfs( 0, b + a, c );
+			else // b + a > c2 -> a > c2 - b
+				dfs( a - ( c2 - b ), c2, c );
+			if ( c + a <= c3 )
+				dfs( 0, b, c + a );
+			else
+				dfs( a - ( c3 - c ), b, c3 );
+		}
 	}
 
 	static BufferedReader reader;

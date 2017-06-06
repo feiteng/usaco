@@ -20,7 +20,7 @@ public class ariprog
 
 	static String filename = "ariprog";
 
-	static boolean test = true;
+	static boolean test = false;
 
 	static void run() throws IOException
 	{
@@ -54,23 +54,24 @@ public class ariprog
 		for ( int i = 0; i < m * m * 2; i++ )
 		{
 			if ( sumsq2[i] > 0 )
-				sumsq[sumP++] = 1;
+				sumsq[sumP++] = i;
 		}
 
 		// max = Collections.max( sqSum );
 		int arrCount = 0;
 		data[] darray = new data[m * m * 2 + 1];
 		// List<int[]> list = new ArrayList<>();
-		for ( a = 0; a <= sumP; a++ )
+		for ( int i = 0; i < sumP; i++ )
 		{
-
-			for ( b = 1; b <= sumP; b++ )
+			a = sumsq[i];
+			for ( int j = i + 1; j < sumP; j++ )
 			{
 				boolean flag = true;
+				b = sumsq[j] - a;
 				for ( int k = n - 1; k >= 0; k-- )
 				{
 					int s = a + k * b;
-					if ( s > max || sumsq[s] == 0 )
+					if ( s > max || sumsq2[s] == 0 )
 					{
 						flag = false;
 						break;
