@@ -20,7 +20,7 @@ public class numtri
 
 	static String filename = "numtri";
 
-	static boolean test = true;
+	static boolean test = false;
 
 	static void run() throws IOException
 	{
@@ -35,15 +35,16 @@ public class numtri
 			{
 				int k = Integer.valueOf( st.nextToken() );
 				if ( j == 0 )
-					a[j] += k;
+					b[j] = a[j] + k;
 				else if ( j == i - 1 )
-					a[j] = a[j - 1] + k;
+					b[j] = a[j - 1] + k;
 				else
-					a[j] = Math.max( a[j - 1], a[j] ) + k;
+					b[j] = Math.max( a[j - 1], a[j] ) + k;
 
-				maxVal = Math.max( maxVal, a[j] );
+				maxVal = Math.max( maxVal, b[j] );
 			}
-			System.out.println( Arrays.toString( a ) );
+			a = Arrays.copyOf( b, b.length );
+			// System.out.println( Arrays.toString( a ) );
 
 		}
 
