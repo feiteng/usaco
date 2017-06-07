@@ -68,31 +68,30 @@ public class milk3
 		visited[a][b][c] = true;
 		if ( a == 0 ) // add c
 		{
+			System.out.printf( "%d %d %d\n", a, b, c );
 			set.add( c );
+		}
+		// c -> a
+		if ( c1 <= c )
+			dfs( c1, b, c - c1 );
+		else
+			dfs( c, b, 0 );
+		// c -> b
+		if ( b + c <= c2 )
+			dfs( a, b + c, 0 );
+		else
+			// b + c > c2 -> c > c2-b
+			dfs( a, c2, c - ( c2 - b ) );
 
-			// c -> a
-			if ( c1 <= c )
-				dfs( c1, b, c - c1 );
-			else
-				dfs( c, b, 0 );
-			// c -> b
-			if ( b + c <= c2 )
-				dfs( a, b + c, 0 );
-			else
-				// b + c > c2 -> c > c2-b
-				dfs( a, c2, c - ( c2 - b ) );
-		}
-		else // a not zero, pour a into b and c
-		{
-			if ( b + a <= c2 )
-				dfs( 0, b + a, c );
-			else // b + a > c2 -> a > c2 - b
-				dfs( a - ( c2 - b ), c2, c );
-			if ( c + a <= c3 )
-				dfs( 0, b, c + a );
-			else
-				dfs( a - ( c3 - c ), b, c3 );
-		}
+		if ( b + a <= c2 )
+			dfs( 0, b + a, c );
+		else // b + a > c2 -> a > c2 - b
+			dfs( a - ( c2 - b ), c2, c );
+		if ( c + a <= c3 )
+			dfs( 0, b, c + a );
+		else
+			dfs( a - ( c3 - c ), b, c3 );
+
 	}
 
 	static BufferedReader reader;
