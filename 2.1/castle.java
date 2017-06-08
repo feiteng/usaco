@@ -109,16 +109,17 @@ public class castle
 		Queue<int[]> neighbours = new LinkedList<>();
 		neighbours.add( new int[] { i, j } );
 		set.add( new int[] { i, j } );
+		visited[i][j] = true;
 		while ( !neighbours.isEmpty() )
 		{
 			int[] pos = neighbours.poll();
-			visited[pos[0]][pos[1]] = true;
 			int[][] d = getDirs( dirs[pos[0]][pos[1]] );
 			for ( int[] n : d )
 				if ( !visited[n[0] + pos[0]][n[1] + pos[1]] )
 				{
 					neighbours.add( new int[] { pos[0] + n[0], pos[1] + n[1] } );
 					set.add( new int[] { pos[0] + n[0], pos[1] + n[1] } );
+					visited[pos[0] + n[0]][pos[1] + n[1]] = true;
 				}
 		}
 
