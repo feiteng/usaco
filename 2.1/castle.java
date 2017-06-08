@@ -24,7 +24,7 @@ public class castle
 
 	static String filename = "castle";
 
-	static boolean test = true;
+	static boolean test = false;
 
 	static void run() throws IOException
 	{
@@ -59,24 +59,31 @@ public class castle
 					{
 						setM[p[0]][p[1]] = set;
 						setMre[p[0]][p[1]] = k;
-						System.out.printf( "%d %d\n", p[0], p[1] );
+						// System.out.printf( "%d %d\n", p[0], p[1] );
 					}
+					// System.out.println( set );
+					//
+
 					k++;
 					posSet.add( set );
-					System.out.println( set );
+
 					maxSise = Math.max( maxSise, set.size() );
 				}
 			}
 		}
-		for ( int[] v : setMre )
-			System.out.println( Arrays.toString( v ) );
-		System.out.println();
-		int[][] allD = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+		if ( test )
+		{
+			for ( int[] v : setMre )
+				System.out.println( Arrays.toString( v ) );
+			System.out.println();
+		}
+		int[][] allD = { { 1, 0 }, { -1, 0 }, { 0, -1 }, { 0, 1 } };
 		int maxSum = 0, newI = 0, newJ = 0;
 		String string = "";
-		for ( int i = 0; i < n; i++ )
+
+		for ( int j = 0; j < m; j++ )
 		{
-			for ( int j = m - 1; j >= 0; j-- )
+			for ( int i = n - 1; i >= 0; i-- )
 			{
 				for ( int[] d : allD )
 				{
@@ -85,7 +92,7 @@ public class castle
 						continue;
 					if ( !setM[i][j].equals( setM[ni][nj] ) )
 					{
-						if ( maxSum <= setM[i][j].size() + setM[ni][nj].size() )
+						if ( maxSum < setM[i][j].size() + setM[ni][nj].size() )
 						{
 							maxSum = setM[i][j].size() + setM[ni][nj].size();
 							newI = i + 1;
