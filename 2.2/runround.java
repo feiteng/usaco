@@ -12,6 +12,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class runround
@@ -19,7 +21,7 @@ public class runround
 
 	static String filename = "runround";
 
-	static boolean test = true;
+	static boolean test = false;
 
 	void run() throws IOException
 	{
@@ -29,7 +31,10 @@ public class runround
 		long n = Integer.valueOf( st.nextToken() );
 		n++;
 		while ( !round( toArray( n ) ) )
+		{
+			// System.out.println( n );
 			n++;
+		}
 		out.println( n );
 
 	}
@@ -38,27 +43,37 @@ public class runround
 	{
 		String s = String.valueOf( n );
 		int[] k = new int[s.length()];
+		Set<Integer> set = new HashSet<>();
 		for ( int i = 0; i < s.length(); i++ )
+		{
 			k[i] = s.charAt( i ) - '0';
+			if ( !set.contains( k[i] ) )
+				set.add( k[i] );
+			else
+				return new int[] { 0 };
+		}
 		return k;
 	}
 
 	boolean round( int[] k )
 	{
-		int m = 0, next = ( m + k[m % k.length] ) % k.length;
+		Set<Integer> set = new HashSet<>();
+		for ( int m : k )
+			if ( m == 0 )
+				return false;
+		int m = 0, next = ( k[m] ) % k.length;
 		boolean[] visit = new boolean[k.length];
-		visit[0] = true;
+		// visit[0] = true;
+		// set.add( 0 );
 		while ( !visit[next] )
 		{
 			visit[next] = true;
-			m = k[next];
-			next = ( m + k[m % k.length] ) % k.length;
+			set.add( next );
+			next = ( k[next] + next ) % k.length;
 
 		}
-		for ( boolean f : visit )
-			if ( !f )
-				return false;
-		return true;
+		return set.size() == k.length;
+
 	}
 
 	public static void main( String[] args ) throws IOException
