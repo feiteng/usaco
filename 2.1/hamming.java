@@ -29,15 +29,71 @@ public class hamming
 	{
 		StringTokenizer st;
 		st = new StringTokenizer( reader.readLine() );
-		int n = Integer.valueOf( st.nextToken() ), blength = Integer.valueOf( st.nextToken() ),
-				hammingDistance = Integer.valueOf( st.nextToken() );
+		int n = Integer.valueOf( st.nextToken() ), blength = Integer.valueOf( st.nextToken() );
+		hammingDistance = Integer.valueOf( st.nextToken() );
 		Integer.bitCount( 0 );
 		int ceil = 1 << blength;
 		int[] nums = new int[ceil];
 		for ( int i = 0; i < nums.length; i++ )
 			nums[i] = i;
-		out.println();
+		findNum( new ArrayList<>(), n, nums, 0 );
 
+		// for ( List<Integer> list : tList )
+		// System.out.println( list );
+		String string = "";
+
+		int i = 0;
+
+		for ( int k : tList )
+		{
+
+			string += "" + k + " ";
+
+			if ( i == 9 )
+			{
+				string = string.substring( 0, string.length() - 1 ) + "\n";
+				i = -1;
+			}
+			i++;
+
+		}
+		out.println( string.substring( 0, string.length() - 1 ) );
+
+	}
+
+	static List<Integer> tList = new ArrayList<>();
+	static int hammingDistance;
+	static boolean flag = false;
+
+	static void findNum( List<Integer> list, int n, int[] nums, int currentPos )
+	{
+		if ( n == 0 && checkHamming( list ) )
+		{
+			// System.out.println( list );
+			tList = new ArrayList<>( list );
+			flag = true;
+			return;
+		}
+		for ( int i = currentPos; i < nums.length; i++ )
+		{
+
+			list.add( nums[i] );
+			if ( checkHamming( list ) && !flag )
+				findNum( list, n - 1, nums, i + 1 );
+			list.remove( list.size() - 1 );
+		}
+	}
+
+	static boolean checkHamming( List<Integer> list )
+	{
+		int k = list.get( list.size() - 1 );
+		for ( int i = 0; i < list.size() - 1; i++ )
+		{
+			// System.out.println( Integer.bitCount( k ^ list.get( i ) ) );
+			if ( Integer.bitCount( k ^ list.get( i ) ) < hammingDistance )
+				return false;
+		}
+		return true;
 	}
 
 	static List<List<Integer>> list = new ArrayList<>();
