@@ -16,6 +16,24 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+class Trie
+{
+	Trie[] child = new Trie[26];
+	String string = null;
+
+	void insert( String string )
+	{
+		Trie root = this;
+		for ( char c : string.toCharArray() )
+		{
+			if ( root.child[c - 'A'] == null )
+				root.child[c - 'A'] = new Trie();
+			root = root.child[c - 'A'];
+		}
+		root.string = string;
+	}
+}
+
 public class prefix
 {
 
