@@ -16,30 +16,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-class Trie
-{
-	Trie[] child = new Trie[26];
-	String string = null;
-
-	void insert( String string )
-	{
-		Trie root = this;
-		for ( char c : string.toCharArray() )
-		{
-			if ( root.child[c - 'A'] == null )
-				root.child[c - 'A'] = new Trie();
-			root = root.child[c - 'A'];
-		}
-		root.string = string;
-	}
-}
-
 public class prefix
 {
 
 	static String filename = "prefix";
 
-	static boolean test = false;
+	static boolean test = true;
 
 	void run() throws IOException
 	{
@@ -76,7 +58,31 @@ public class prefix
 				break;
 		}
 
-		out.println( "IMPOSSIBLE" );
+		Trie root = new Trie();
+		for ( String s : primitive )
+			root.insert( s );
+
+		findLen( root, sequence.toString(), 0 );
+
+		out.println( len );
+	}
+
+	int len = 0;
+
+	void findLen( Trie root, String sequence, int pos )
+	{
+		for ( int i = pos; i < sequence.length(); i++ )
+		{
+			if ( root.child[sequence.charAt( i )] == null )
+			{
+				len = Math.max( pos, len );
+				return;
+			}
+			if ( root.string != null )
+				findLen( root, sequence, i + 1 );
+			root = root.child[sequence.charAt( i )];
+		}
+		len = Math.max( pos, len );
 	}
 
 	public static void main( String[] args ) throws IOException
@@ -84,7 +90,7 @@ public class prefix
 
 		long t = System.currentTimeMillis();
 		setup();
-		new lamps().run();
+		new prefix().run();
 
 		System.out.printf( "Run time... %s ms\n", System.currentTimeMillis() - t );
 
@@ -111,4 +117,22 @@ public class prefix
 	static BufferedReader reader;
 	static PrintWriter out;
 
+}
+
+class Trie
+{
+	Trie[] child = new Trie[26];
+	String string = null;
+
+	void insert( String string )
+	{
+		Trie root = this;
+		for ( char c : string.toCharArray() )
+		{
+			if ( root.child[c - 'A'] == null )
+				root.child[c - 'A'] = new Trie();
+			root = root.child[c - 'A'];
+		}
+		root.string = string;
+	}
 }
