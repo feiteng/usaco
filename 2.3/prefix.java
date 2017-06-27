@@ -10,7 +10,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,25 +20,74 @@ public class prefix
 
 	static String filename = "prefix";
 
-	static boolean test = true;
+	static boolean test = false;
+
+	Set<String> primitive = new HashSet<>();
+	String string;
+
+	int len = 0;
+	Trie _root = new Trie();
 
 	void run() throws IOException
 	{
 
-		Set<String> primitive = new HashSet<>();
+		for ( String s : primitive )
+			_root.insert( s );
+
+		readData();
+
+		// trie is a lot slower.., due to recursive thinking
+
+		bruteForce();
+
+	}
+
+	void bruteForce()
+	{
+		// idea from https://github.com/lklein/usaco-training/blob/master/usaco/prefix/prefix.java
+
+		boolean[] vist = new boolean[string.length() + 1];
+		for ( String s : primitive )
+		{
+			if ( string.substring( 0, s.length() ).equals( s ) )
+				vist[s.length()] = true;
+		}
+		for ( int i = 0; i < vist.length; i++ )
+		{
+			if ( vist[i] )
+			{
+				for ( String s : primitive )
+				{
+					if ( i + s.length() <= string.length() &&
+							string.substring( i, i + s.length() ).equals( s ) )
+						vist[i + s.length()] = true;
+				}
+			}
+		}
+		int m = 0;
+		for ( int i = 0; i < vist.length; i++ )
+			if ( vist[i] )
+				m = i;
+		out.println( m );
+	}
+
+	void readData() throws IOException
+	{
 		StringTokenizer st;
+
 		st = new StringTokenizer( reader.readLine() );
 		boolean flag = true;
 		while ( flag )
 		{
 			while ( st.hasMoreTokens() )
 			{
-				if ( st.nextToken().equals( "." ) )
+				String nextToken = st.nextToken();
+				if ( nextToken.equals( "." ) )
 				{
 					flag = false;
 					break;
 				}
-				primitive.add( st.nextToken() );
+				primitive.add( nextToken );
 			}
 			if ( flag )
 				st = new StringTokenizer( reader.readLine() );
@@ -47,40 +95,37 @@ public class prefix
 		// now read string
 		StringBuilder sequence = new StringBuilder();
 
-		flag = true;
-		while ( flag )
+		String line = reader.readLine();
+		while ( line != null )
 		{
-			while ( st.hasMoreTokens() )
-			{
-				sequence.append( st.nextToken() );
-			}
-			if ( ( st = new StringTokenizer( reader.readLine() ) ) == null )
-				break;
+			sequence.append( line );
+			line = reader.readLine();
 		}
 
-		Trie root = new Trie();
-		for ( String s : primitive )
-			root.insert( s );
+		string = sequence.toString();
 
-		findLen( root, sequence.toString(), 0 );
-
-		out.println( len );
 	}
 
-	int len = 0;
+	void trieMethod()
+	{
+
+		findLen( _root, string, 0 );
+		out.println( len );
+	}
 
 	void findLen( Trie root, String sequence, int pos )
 	{
 		for ( int i = pos; i < sequence.length(); i++ )
 		{
-			if ( root.child[sequence.charAt( i )] == null )
+			if ( root.child[sequence.charAt( i ) - 'A'] == null )
 			{
 				len = Math.max( pos, len );
 				return;
 			}
-			if ( root.string != null )
-				findLen( root, sequence, i + 1 );
-			root = root.child[sequence.charAt( i )];
+			if ( root.child[sequence.charAt( i ) - 'A'].string != null )
+				findLen( _root, sequence, i + 1 ); // either start with original tree
+			root = root.child[sequence.charAt( i ) - 'A']; // or continue finding on current tree
+
 		}
 		len = Math.max( pos, len );
 	}
@@ -103,7 +148,8 @@ public class prefix
 
 		if ( test )
 		{
-			reader = new BufferedReader( new InputStreamReader( System.in ) );
+			String f = "C:/Users/Feiteng/Desktop/java/usaco/2.3/prefix.txt";
+			reader = new BufferedReader( new FileReader( f ) );
 			out = new PrintWriter( System.out );
 		}
 		else
